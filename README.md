@@ -208,7 +208,7 @@
 
 ​		这里我们选择在原有基础上增加调整数据样本的亮度和对比度，沿对角线翻转两种方法来做数据增强。
 
-![](images/20.png.jpg)
+![](images/20.png)
 
 ![](images/21.png.jpg)
 
@@ -262,7 +262,8 @@
 
 ## 4.1.HDR-Transformer的结果
 
-​		我们使用的数据集是基于Kalantari17's dataset（链接：https://cseweb.ucsd.edu/viscomp/projects/SIG17HDR/）完成的。由于我们的电脑不支持cuda，于是我们是在colab上进行的本次实验，发现colab上也会限制GPU计算资源，所以我们没有完全训练该数据集，我们将原数据集进行预处理，最后是基于2772张图片进行训练，使用了9个场景的数据集来进行测试。
+​		我们使用的数据集是基于Kalantari17's dataset（链接：https://cseweb.ucsd.edu/viscomp/projects/SIG17HDR/）
+完成的。由于我们的电脑不支持cuda，于是我们是在colab上进行的本次实验，发现colab上也会限制GPU计算资源，所以我们没有完全训练该数据集，我们将原数据集进行预处理，最后是基于2772张图片进行训练，使用了9个场景的数据集来进行测试。
 
  		得到的图片效果如下，这里仅展示了其中三个场景得到的效果图，其余测试集结果可在我们的github上查看：
 
