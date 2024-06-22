@@ -66,15 +66,15 @@
 
 **全局Transformer编码器：**对于全局分支，作者采用基于窗口的多头Transformer编码器来捕获长距离信息。Transformer编码器由一个多头自注意力（MSA）模块和具有残差连接的多层感知机组成。公式化表示如下（其中LN表示LayerNorm，CTXglobal表示由Transformer编码器捕获的全局上下文）：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image004.png)
+![](images/2.png)
 
 **局部特征提取器：**对于局部分支，设计了一个局部上下文提取器（LCE），从相邻像素中提取局部信息CTX(local)，并选择跨通道特征进行融合。公式化表示为：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image006.png)
+![](images/3.png)
 
 ​		具体来说，对于用LN层归一化的token embeddings E，首先将它们重塑为H×W×D大小的特征，并使用卷积块来提取局部特征图。然后将局部特征合并为1×1×D的形状，并分别从两个线性层和ReLU和sigmoid激活层来计算逐通道权重ω。然后通过逐通道校准从原始局部特征中选择有用的特征图。
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image008.png)
+![](images/1.png)
 
 ​		其中σ1和σ2表示ReLU和sigmoid层，FC表示线性层。因此，局部上下文分支不仅将局部性添加到Transformer model编码器中，而且还将跨多个帧识别信息最丰富的局部特征以进行特征融合。
 
@@ -86,27 +86,27 @@
 
 ​		作者将3个LDR图像（即，Ii，i=1，2，3）作为输入，并将中间帧I2作为参考图像。为了更好地利用输入数据，首先使用伽马校正将LDR图像{Ii}映射到HDR域：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image010.jpg)
+![](images/1.png)
 
 ​		其中ti表示Ii的曝光时间，γ是γ校正参数，本文将其设置为2.2。然后，将原始LDR图像{Ii}和相应的伽马校正图像{Ii}连接到通道输入{Xi}中。因为LDR图像有助于检测噪声或饱和区域，而伽马校正图像有助于检测未对准。最后，网络Φ(·)定义为：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image012.jpg)
+![](images/1.png)
 
 **3.HDR-Transformer model总体架构**
 
 ​		HDR-Transformer model的整体结构主要由两个组件组成，即特征提取网络（图(a)）和HDR重建网络（图(b)）。给定三幅输入图像，首先通过空间注意力模块提取空间特征。然后将提取的较粗特征嵌入并馈送到基于Transformer model的HDR重建网络中，生成重建的无重影HDR图像。
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image014.png)
+![](images/1.png)
 
 （1）特征提取网络：
 
 ​		前期的卷积层有助于稳定Vision Transformers的训练过程。对于输入图像Xi∈R^{H×W×C}，i=1,2,3，首先通过三个单独的卷积层提取稀疏特征，其中C是通道的数量。然后将每个非参考特征（例如f1和f3）与参考特征f2合并，并通过空间注意力模块A计算注意映射mi：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image016.png)
+![](images/1.png)
 
 ​		其中注意力特征f'被计算为将注意映射mi乘以非参考特征fi，即
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image018.png)
+![](images/1.png)
 
 ​		其中⊙表示各元素相乘。空间注意力模块已被证明可以有效地消除前景对象移动引起的不期望的内容。注意力模块中的卷积层也可以增加对后续Transformer层的关注。
 
@@ -132,17 +132,17 @@
 
 ​		ResNet网络是参考了VGG19网络，在其基础上进行了修改，并通过短路机制加入了残差单元，如下图所示。变化主要体现在ResNet直接使用stride=2的卷积做下采样，并且用global average pool层替换了全连接层。ResNet的一个重要设计原则是：当feature map大小降低一半时，feature map的数量增加一倍，这保持了网络层的复杂度。从下图中可以看到，ResNet相比普通网络每两层间增加了短路机制，这就形成了残差学习，其中虚线表示feature map数量发生了改变。（这里以ResNet34为例）
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image020.jpg)
+![](images/1.png)
 
 ​		上图展示的34-layer的ResNet，还可以构建更深的网络如下表所示。从表中可以看到，对于18-layer和34-layer的ResNet，其进行的两层间的残差学习，当网络更深时，其进行的是三层间的残差学习，三层卷积核分别是1x1，3x3和1x1，一个值得注意的是隐含层的feature map数量是比较小的，并且是输出feature map数量的1/4。
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image022.png)
+![](images/1.png)
 
 2.残差单元
 
 ​		ResNet使用两种残差单元，如下图所示。左图对应的是浅层网络，而右图对应的是深层网络。对于短路连接，当输入和输出的维度一致时，可以直接将输入加到输出上。但是当维度不一致时（对应的是维度增加一倍），这就不能直接相加。有两种策略：（1）采用zero-padding增加维度，此时一般要先做一个downsamp，可以采用strde=2的pooling，这样不会增加参数；（2）采用新的映射（projection shortcut），一般采用1x1的卷积，这样会增加参数，也会增加计算量。短路连接除了直接使用恒等映射，当然都可以采用projection shortcut。
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image023.png)
+![](images/1.png)
 
 3.ResNet的主要作用
 
@@ -164,29 +164,28 @@
 
 ​		Transformer中提出的多头自注意力模块运算公式为：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image025.png)
+![](images/1.png)
 
 ​		其计算量如下：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image027.png)
+![](images/1.png)
 
 2.Windows Multi-head Self-Attention(W-MSA)
 
 ​		W-MSA的全称为Windows Multi-head Self-Attention，相较于MSA而言，引入了Widnwos机制。其对比图如下：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image029.png)
+![](images/1.png)
 
 ​		可以看出，W-MSA是一个窗口化的多头自注意力，与全局自注意力相比，减少了大量的计算量。而从数学计算过程上来分析：W-MSA与MSA总体的计算过程是一致的，区别在于：W-MSA的长宽不再是H和W，而是窗口:M∗M，并且有 HM∗WM个窗口需要计算：
 
-![https://img-blog.csdnimg.cn/752d8da6f4b547f595e807242f61d36a.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP5ZGoXw==,size_16,color_FFFFFF,t_70,g_se,x_16](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image031.png)
-
+![https://img-blog.csdnimg.cn/752d8da6f4b547f595e807242f61d36a.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP5ZGoXw==,size_16,color_FFFFFF,t_70,g_se,x_16](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image031.png)![](images/1.png)
 ​		所以它的计算量为：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image033.png)
+![](images/1.png)
 
 ​		从他们公式可以看出区别主要在于两个公式的后半部分：
 
-![https://img-blog.csdnimg.cn/546b3018c3c247049480a73b86af80f7.png](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image035.png)
+![](images/1.png)
 
 ​		带一点数进去就可以看出W-MSA在计算量上比MSA少很多，这是W-MSA相较于MSA的优势之一。
 
@@ -208,9 +207,9 @@
 
 ​		这里我们选择在原有基础上增加调整数据样本的亮度和对比度，沿对角线翻转两种方法来做数据增强。
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image037.jpg)
+![](images/1.png)
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image039.jpg)
+![](images/1.png)
 
 ​		通过实验结果证明，增加数据增强的方法提高了HDR成像的效果。
 
@@ -218,15 +217,15 @@
 
 ​		观察到原文的提取特征方式较为简单，我们试图通过现有的ResNet模型来更换提取特征的方法。我们实现了使用ResNet14来提取特征，实现如下（仅展示关键代码）：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image041.png)
+![](images/1.png)
 
 ​		对应的修改模型的前向传播部分：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image043.png)
+![](images/1.png)
 
 ​		将原论文实现中提取特征的部分进行替换：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image045.png)
+![](images/1.png)
 
 ​		我们在colab上运行调试时遇到了很多问题，包括矩阵维度不匹配、GPU资源不够等等，花费了我们很长的时间来解决这些报错，由于课程实验时间有限，我们改变了新的方向实现，我们将会在课程结束后继续修改使用ResNet架构来实现我们想法。
 
@@ -234,11 +233,11 @@
 
 ​		原文中，每个卷积层对输入通道数全部进行卷积操作，生成三个不同的特征图；使用空间注意力模块对特征图进行处理，增强特征；最后将三个特征图合并后通过一个卷积层进行进一步特征提取。这一方法对计算资源的要求较高，且内存消耗较大。
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image047.png)
+![](images/1.png)
 
 ​		我们的改进是：将输入通道数分成三份，分别进行卷积操作，然后再合并，最后通过一个MLP层进行特征提取。这样以来每个卷积层处理的通道数大大减少，从而减小了计算量和内存的效率；同时我们结合 Mlp 方法进行特征处理，可以引入更多非线性变换和灵活性。
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image049.png)
+![](images/1.png)
 
 ### 3.2.4.创新更深层的特征提取
 
@@ -256,7 +255,7 @@
 
 ​		关键代码截图如下：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image051.png)
+![](images/1.png)
 
 # 4.结果
 
@@ -266,37 +265,36 @@
 
  		得到的图片效果如下，这里仅展示了其中三个场景得到的效果图，其余测试集结果可在我们的github上查看：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image053.jpg)
+![](images/1.png)
 
  
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image055.jpg)
-
+![](images/1.png)
  
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image057.jpg)
+![](images/1.png)
 
 ## 4.2.我们的Improve-HDR的结果 
 
 ​		基于我们改进后的模型，我们使用的训练集和测试集同HDR-Transformer的相同，训练过程展示(部分)如下：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image059.jpg)
+![](images/1.png)
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image061.jpg)
+![](images/1.png)
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image063.jpg)
+![](images/30.png)
 
 ​		得到的效果图如下，这里仅展示了三个场景得到的效果图，其余测试集结果可在我们的github上查看：
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image065.jpg)
+![](images/31.png)
 
  
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image067.jpg)
+![](images/33.png)
 
  
 
-![img](file:///C:/Users/176099~1/AppData/Local/Temp/msohtmlclip1/01/clip_image069.jpg)
+![](images/34.png)
 
 # 5.总结和讨论
 
