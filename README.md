@@ -14,13 +14,9 @@
 
 4. 我们提出了更深层的特征提取方式，通过实现Swin-Transformer论文中提出的Window Multi-head Self-Attention（W-MSA）方法，以及结合相互注意力和合并注意力机制的方式来提取更深层的特征，以此来提高HDR-Transformer模型的效果。
 
-**视频链接：**
+**视频链接：** [中国海洋大学计算机视觉期末项目（基于HDR_Transformer的创新）-哔哩哔哩](https://b23.tv/Hnl5PhB)
 
-     【中国海洋大学计算机视觉期末项目（基于HDR_Transformer的创新）-哔哩哔哩】 https://b23.tv/Hnl5PhB
-
-**项目报告原文：**
-
-     https://github.com/OUC-CV/final-project-day-day-up/blob/main/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%E6%9C%9F%E6%9C%AB%E6%8A%A5%E5%91%8Adaydayup%E7%BB%84.pdf
+**项目报告:**     [原文](https://github.com/OUC-CV/final-project-day-day-up/blob/main/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%E6%9C%9F%E6%9C%AB%E6%8A%A5%E5%91%8Adaydayup%E7%BB%84.pdf)
 
 # 2.相关工作
 
@@ -267,9 +263,8 @@
 
 ## 4.1.HDR-Transformer的结果
 
-​		我们使用的数据集是基于Kalantari17's dataset（链接：https://cseweb.ucsd.edu/viscomp/projects/SIG17HDR/）
-完成的。由于我们的电脑不支持cuda，于是我们是在colab上进行的本次实验，发现colab上也会限制GPU计算资源，所以我们没有完全训练该数据集，我们将原数据集进行预处理，最后是基于2772张图片进行训练，使用了9个场景的数据集来进行测试。得到的图片效果如下，这里仅展示了其中三个场景得到的效果图，其余测试集结果可在我们的github上查看：
-          链接：https://github.com/OUC-CV/final-project-day-day-up/tree/main/HDR-Transformer/results
+​		我们使用的数据集是基于[Kalantari17's dataset](https://cseweb.ucsd.edu/~viscomp/projects/SIG17HDR/)完成的。由于我们的电脑不支持cuda，于是我们是在colab上进行的本次实验，发现colab上也会限制GPU计算资源，所以我们没有完全训练该数据集，我们将原数据集进行预处理，最后是基于2772张图片进行训练，使用了9个场景的数据集来进行测试。得到的图片效果如下，这里仅展示了其中三个场景得到的效果图，其余[测试集结果](https://github.com/OUC-CV/final-project-day-day-up/tree/main/HDR-Transformer/results
+)可在我们的github上查看。
 
 ![](images/26.png)
 
