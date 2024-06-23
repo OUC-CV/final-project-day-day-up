@@ -18,7 +18,7 @@
 
      【中国海洋大学计算机视觉期末项目（基于HDR_Transformer的创新）-哔哩哔哩】 https://b23.tv/Hnl5PhB
 **项目报告原文：**
-     https://github.com/OUC-CV/final-project-day-day-up/tree/main/HDR-Transformer/results
+     (https://github.com/OUC-CV/final-project-day-day-up/blob/main/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%E6%9C%9F%E6%9C%AB%E6%8A%A5%E5%91%8Adaydayup%E7%BB%84.pdf)
 
 # 2.相关工作
 
